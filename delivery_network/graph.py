@@ -55,18 +55,20 @@ class Graph:
         dist: numeric (int or float), optional
             Distance between node1 and node2 on the edge. Default is 1.
         """
-        if node1 not in self.graph:
-            self.graph[node1] = []
-            self.nb_nodes += 1
+#Il faut dans un premier temps verifier que les noeuds sont dans le graph sinon on les ajoutes 
+        
+        if node1 not in self.graph.keys() :
+            self.graph[node1]=[]
             self.nodes.append(node1)
-        if node2 not in self.graph:
-            self.graph[node2] = []
-            self.nb_nodes += 1
+            self.nb_nodes +=1
+        if node2 not in self.graph.keys() :
+            self.graph[node2]=[]
             self.nodes.append(node2)
+            self.nb_nodes +=1
 
-        self.graph[node1].append((node2, power_min, dist))
-        self.graph[node2].append((node1, power_min, dist))
-        self.nb_edges += 1
+        self.graph[node1].append((node2, power_min, dist)) #On ajoute la relation a partir de la 1ere extremité de l'arrete 
+        self.graph[node2].append((node1, power_min, dist)) # On ajoute également de l'autre coté ( vice versa)
+        self.nb_edges +=1
     
 
     def get_path_with_power(self, src, dest, power):
@@ -79,9 +81,12 @@ class Graph:
 
     def connected_components_set(self):
         """
-        The result should be a set of frozensets (one per component), 
+        The result should be a set of frozensets (one per component),
         For instance, for network01.in: {frozenset({1, 2, 3}), frozenset({4, 5, 6, 7})}
         """
+        composante = []
+        n= self.
+
         return set(map(frozenset, self.connected_components()))
     
     def min_power(self, src, dest):
