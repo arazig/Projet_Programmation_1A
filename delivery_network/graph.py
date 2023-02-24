@@ -76,19 +76,39 @@ class Graph:
     
 
     def connected_components(self):
-        raise NotImplementedError
+        """
+        return a list of all the conected components of a graph
+        """
+        composantes = []
+        N= self.nb_nodes
+        s=[]
+        visited={i:False for i in self.nodes}
+        while N !=[] : 
+            s=N[0]
+            c= exploration(s) # nous renvoie tous les noeuds reliés à s
+            composantes.append(c)
+            for i in c :
+                N.pop(i)
+        return composantes
 
+    def exploration(self,s,visited):
+        l=[]
+        s_voisin = [self.graph[s][j][0] for j in range(0,len(self.graph[s]))]
+        for q in s_voisin: 
+            if visited[q]== False :
+                visited[q]= True
+                l=l+ self.exploration(q,visited)
+        return l
 
     def connected_components_set(self):
         """
         The result should be a set of frozensets (one per component),
         For instance, for network01.in: {frozenset({1, 2, 3}), frozenset({4, 5, 6, 7})}
         """
-        composante = []
-        n= self.
+        return set(map(frozenset, self.connected_components()))  
 
-        return set(map(frozenset, self.connected_components()))
-    
+
+
     def min_power(self, src, dest):
         """
         Should return path, min_power. 
