@@ -74,31 +74,29 @@ class Graph:
     def get_path_with_power(self, src, dest, power):
         raise NotImplementedError
     
-
     def connected_components(self):
         """
         return a list of all the conected components of a graph
         """
-        composantes = []
-        N= self.nb_nodes
-        s=[]
-        visited={i:False for i in self.nodes}
-        while N !=[] : 
-            s=N[0]
-            c= exploration(s) # nous renvoie tous les noeuds reliés à s
-            composantes.append(c)
-            for i in c :
-                N.pop(i)
-        return composantes
+        #création d'un dictionnaire permettant de voir si un noeud est visité
+        visited={i:False for i in self.nodes} 
 
-    def exploration(self,s,visited):
-        l=[]
-        s_voisin = [self.graph[s][j][0] for j in range(0,len(self.graph[s]))]
-        for q in s_voisin: 
-            if visited[q]== False :
-                visited[q]= True
-                l=l+ self.exploration(q,visited)
-        return l
+        def exploration(s):
+            #this function return all the nodes of a graph explorated from an initial one
+                L=[s] # list of the connected nodes
+                s_neigh = [self.graph[s][j][0] for j in range(0,len(self.graph[s]))] #list of the node's neighbours
+                for neigh in s_neigh: 
+                    if not visited[neigh] : #for each neighbor not visited
+                        visited[neigh]=True 
+                        L=L+ exploration(neigh) 
+                return L
+
+        Components = []
+        N= self.nodes
+        for node in N :
+            if visited[node]==False : 
+                Components.append(exploration(node))
+        return Components
 
     def connected_components_set(self):
         """
