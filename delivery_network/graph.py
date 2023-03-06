@@ -72,6 +72,37 @@ class Graph:
     
 
     def get_path_with_power(self, src, dest, power):
+        """Cette fonction permet de svoir si il existe un trajet possible entre 
+        deux neouds pour un camion avec une puissance donnée.
+
+        Args:
+            src (int): source, starting node
+            dest (int): destinantion
+            power (int): power of the truck
+        """
+        #Tout d'abord, on regarde si les deux noeuds sont la meme composantes, si non on retourne None
+        samecomp= False
+        for comp in connected_components(self):
+            if (frozenset([src,dest])) in comp :
+                samecomp = True
+        if samecomp == False :
+            return None
+
+        #A present il nous faut récuperer tous les chemins possibles entre les deux noeuds
+        explo=[(src,[src])]
+4	    list_paths = [] # list of the paths between the nodes
+5	    while explo!=[] : 
+6	        node, path = explo.pop(0) # cela nous permet d'actualiser les chemins explo
+            n_neigh = [self.graph[node][j][0] for j in range(0,len(self.graph[node]))] #list of the node's neighbours
+7	        for neighb in n_neigh : 
+8	            if neight not in path:  # for each neighbor not yet in the path
+9	                if neighb == dest:
+10	                    list_paths.append(path + [neighb])
+11	                else:
+12	                    explo.append((neighb, path + [neighb]))
+13	    # Ensuite, on regarde parmis les trajet possible celui qui est compatible avec la puissance du camion 
+
+
         raise NotImplementedError
     
     def connected_components(self):
