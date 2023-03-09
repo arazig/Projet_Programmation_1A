@@ -156,13 +156,16 @@ class Graph:
                         list_paths.append((path + [neighb[0]],max(node[1],powermin)))
                     else:
                         explo.append(((neighb[0],max(node[1],powermin)), path + [neighb[0]]))
+        if list_paths==[]:
+            return None
+        else :
+            mini= float('inf')
+            for chm in list_paths : #loop to recover the minimum power
+                if chm[1]<= mini :
+                    mini=chm[1]
+                    path_result = chm
 
-        mini= float('inf')
-        for chm in list_paths : #loop to recover the minimum power
-            if chm[1]<= mini :
-                path_result = chm
-
-        return None if path_result ==[] else path_result[0],path_result[1]
+            return path_result[0],path_result[1]
 
 
 
