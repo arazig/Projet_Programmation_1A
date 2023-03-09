@@ -95,6 +95,7 @@ class Graph:
                 Components.append(exploration(node))
         return Components
 
+
     def connected_components_set(self):
         """
         The result should be a set of frozensets (one per component),
@@ -129,44 +130,73 @@ class Graph:
                         explo.append((neighb[0], path + [neighb[0]]))
         return None if list_paths ==[] else list_paths[0]
 
+
     def min_power(self, src, dest):
         """
+        calculates, for a given journey t, the minimum power of a truck that can cover this journey
         Should return path, min_power. 
+
+        Args:
+            src (int): source, starting node
+            dest (int): destinantion
+        Output :
+        path (list)
+        min_power (int)
+
         """
-        raise NotImplementedError
+        explo=[((src,0),[src])] # format : [(node,pw_min),[path]]
+        list_paths = [] # list of the paths between the nodes
+        while explo : 
+            node, path = explo.pop(0) # it allows us to update the paths used
+            n_neigh = [self.graph[node[0]][j] for j in range(0,len(self.graph[node[0]]))] #list of (node's neighbours,powermin,dist)
+            for neighb in n_neigh : 
+                powermin = neighb[1]
+                if neighb[0] not in path :  #for each neighbor not yet in the path
+                    if neighb[0] == dest:
+                        list_paths.append((path + [neighb[0]],max(node[1],powermin)))
+                    else:
+                        explo.append(((neighb[0],max(node[1],powermin)), path + [neighb[0]]))
+
+        mini= float('inf')
+        for chm in list_paths : #loop to recover the minimum power
+            if chm[1]<= mini :
+                path_result = chm
+
+        return None if path_result ==[] else path_result[0],path_result[1]
 
 
-def graph_from_file(filename):
-    """
-    Reads a text file and returns the graph as an object of the Graph class.
 
-    The file should have the following format: 
-        The first line of the file is 'n m'
-        The next m lines have 'node1 node2 power_min dist' or 'node1 node2 power_min' (if dist is missing, it will be set to 1 by default)
-        The nodes (node1, node2) should be named 1..n
-        All values are integers.
+    def graph_from_file(filename):
+        """
+        Reads a text file and returns the graph as an object of the Graph class.
 
-    Parameters: 
-    -----------
-    filename: str
-        The name of the file
+        The file should have the following format: 
+            The first line of the file is 'n m'
+            The next m lines have 'node1 node2 power_min dist' or 'node1 node2 power_min' (if dist is missing, it will be set to 1 by default)
+            The nodes (node1, node2) should be named 1..n
+            All values are integers.
 
-    Outputs: 
-    -----------
-    g: Graph
-        An object of the class Graph with the graph from file_name.
-    """
-    with open(filename, "r") as file:
-        n, m = map(int, file.readline().split())
-        g = Graph(range(1, n+1))
-        for _ in range(m):
-            edge = list(map(int, file.readline().split()))
-            if len(edge) == 3:
-                node1, node2, power_min = edge
-                g.add_edge(node1, node2, power_min,1) # will add dist=1 by default
-            elif len(edge) == 4:
-                node1, node2, power_min, dist = edge
-                g.add_edge(node1, node2, power_min, dist)
-            else:
-                raise Exception("Format incorrect")
-    return g
+        Parameters: 
+        -----------
+        filename: str
+            The name of the file
+
+        Outputs: 
+        -----------
+        g: Graph
+            An object of the class Graph with the graph from file_name.
+        """
+        with open(filename, "r") as file:
+            n, m = map(int, file.readline().split())
+            g = Graph(range(1, n+1))
+            for _ in range(m):
+                edge = list(map(int, file.readline().split()))
+                if len(edge) == 3:
+                    node1, node2, power_min = edge
+                    g.add_edge(node1, node2, power_min,1) # will add dist=1 by default
+                elif len(edge) == 4:
+                    node1, node2, power_min, dist = edge
+                    g.add_edge(node1, node2, power_min, dist)
+                else:
+                    raise Exception("Format incorrect")
+        return g
