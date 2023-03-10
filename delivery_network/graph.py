@@ -71,6 +71,16 @@ class Graph:
         self.nb_edges +=1
     
     
+    def exploration(s):
+    #this function return all the nodes of a graph explorated from an initial one
+        L=[s] # list of the connected nodes
+        s_neigh = [self.graph[s][j][0] for j in range(0,len(self.graph[s]))] #list of the node's neighbours
+        for neigh in s_neigh: 
+            if not visited[neigh] : #for each neighbor not visited
+                visited[neigh]=True 
+                L=L+ exploration(neigh) 
+        return L
+
     def connected_components(self):
         """
         return a list of all the conected components of a graph
@@ -78,21 +88,12 @@ class Graph:
         #création d'un dictionnaire permettant de voir si un noeud est visité
         visited={i:False for i in self.nodes} 
 
-        def exploration(s):
-            #this function return all the nodes of a graph explorated from an initial one
-                L=[s] # list of the connected nodes
-                s_neigh = [self.graph[s][j][0] for j in range(0,len(self.graph[s]))] #list of the node's neighbours
-                for neigh in s_neigh: 
-                    if not visited[neigh] : #for each neighbor not visited
-                        visited[neigh]=True 
-                        L=L+ exploration(neigh) 
-                return L
 
         Components = []
         N= self.nodes
         for node in N :
             if visited[node]==False : 
-                Components.append(exploration(node))
+                Components.append(self.exploration(node))
         return Components
 
 
@@ -118,17 +119,20 @@ class Graph:
         """
         explo=[(src,[src])]
         list_paths = [] # list of the paths between the nodes
+        visited={i:False for i in self.nodes} 
         while explo : 
             node, path = explo.pop(0) # it allows us to update the paths used
             n_neigh = [self.graph[node][j] for j in range(0,len(self.graph[node]))] #list of (node's neighbours,powermin,dist)
-            for neighb in n_neigh : 
+            for neighb in n_neigh :
                 powermin = neighb[1]
                 if neighb[0] not in path and power >= powermin:  #for each neighbor accessible (by truck's power) not yet in the path
                     if neighb[0] == dest:
                         list_paths.append(path + [neighb[0]])
-                    else:
+                    elif not visited[neighb[0]]:
                         explo.append((neighb[0], path + [neighb[0]]))
+                        visited[neighb[0]] = True
         return None if list_paths ==[] else list_paths[0]
+
 
 
     def min_power(self, src, dest):
