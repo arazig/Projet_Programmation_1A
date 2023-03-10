@@ -71,16 +71,6 @@ class Graph:
         self.nb_edges +=1
     
     
-    def exploration(s):
-    #this function return all the nodes of a graph explorated from an initial one
-        L=[s] # list of the connected nodes
-        s_neigh = [self.graph[s][j][0] for j in range(0,len(self.graph[s]))] #list of the node's neighbours
-        for neigh in s_neigh: 
-            if not visited[neigh] : #for each neighbor not visited
-                visited[neigh]=True 
-                L=L+ exploration(neigh) 
-        return L
-
     def connected_components(self):
         """
         return a list of all the conected components of a graph
@@ -88,12 +78,21 @@ class Graph:
         #création d'un dictionnaire permettant de voir si un noeud est visité
         visited={i:False for i in self.nodes} 
 
+        def exploration(s):
+            #this function return all the nodes of a graph explorated from an initial one
+                L=[s] # list of the connected nodes
+                s_neigh = [self.graph[s][j][0] for j in range(0,len(self.graph[s]))] #list of the node's neighbours
+                for neigh in s_neigh: 
+                    if not visited[neigh] : #for each neighbor not visited
+                        visited[neigh]=True 
+                        L=L+ exploration(neigh) 
+                return L
 
         Components = []
         N= self.nodes
         for node in N :
             if visited[node]==False : 
-                Components.append(self.exploration(node))
+                Components.append(exploration(node))
         return Components
 
 
@@ -105,9 +104,7 @@ class Graph:
         return set(map(frozenset, self.connected_components()))  
 
 
-    
     def get_path_with_power(self, src, dest, power):
-
         """This function allows you to see if there is a possible path between
         two nodes for a truck with a given power. If yes, it returns one of the 
         of the possible paths.
@@ -131,9 +128,7 @@ class Graph:
                     elif not visited[neighb[0]]:
                         explo.append((neighb[0], path + [neighb[0]]))
                         visited[neighb[0]] = True
-        return None if list_paths ==[] else list_paths[0]
-
-
+        return None if list_paths ==[] else list_paths
 
     def min_power(self, src, dest):
         """
@@ -234,15 +229,16 @@ def graph_from_file_bis(filename):
         An object of the class Graph with the graph from file_name.
     """
     file = open(filename,"r")
-    g = Graph([])
+    n =int(file.readline().split()[0])
+    g = Graph(range(1,n+1))
     lines =file.readlines() # c'est une liste de lignes ["1 2 3","2 3 5"]
-    for line in lines[1::] :
+    for line in lines[0::] :
         line = line.split()
         if len(line)==3 :
             node1, node2, power_min= map(int,line)
             g.add_edge(node1, node2, power_min) # will add dist=1 by default
         elif len(line)==4 :
-            print(map(int,line))
+            #print(map(int,line))
             node1, node2, power_min, dist= map(int,line)
             g.add_edge(node1, node2, power_min, dist)
         else :
