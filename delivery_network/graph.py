@@ -28,7 +28,7 @@ class Graph:
         self.graph = dict([(n, []) for n in nodes])
         self.nb_nodes = len(nodes)
         self.nb_edges = 0
-    
+        self.powers = []
 
     def __str__(self):
         """Prints the graph as a list of neighbors for each node (one per line)"""
@@ -128,12 +128,13 @@ class Graph:
                     elif not visited[neighb[0]]:
                         explo.append((neighb[0], path + [neighb[0]]))
                         visited[neighb[0]] = True
-        return None if list_paths ==[] else list_paths
-
-    def min_power(self, src, dest):
-        """
-        calculates, for a given journey t, the minimum power of a truck that can cover this journey
-        Should return path, min_power. 
+        return None if list_paths ==[] else list_paths[0]
+    
+    def min_power(self, src, dest) :
+        """      
+        calculates, for a given journey t, by a dichotomic method the minimum power of 
+        a truck that can cover a given journey.
+        Return a path and the minimal power. 
 
         Args:
             src (int): source, starting node
@@ -141,30 +142,21 @@ class Graph:
         Output :
         path (list)
         min_power (int)
-
         """
-        explo=[((src,0),[src])] # format : [(node,pw_min),[path]]
-        list_paths = [] # list of the paths between the nodes
-        while explo : 
-            node, path = explo.pop(0) # it allows us to update the paths used
-            n_neigh = [self.graph[node[0]][j] for j in range(0,len(self.graph[node[0]]))] #list of (node's neighbours,powermin,dist)
-            for neighb in n_neigh : 
-                powermin = neighb[1]
-                if neighb[0] not in path :  #for each neighbor not yet in the path
-                    if neighb[0] == dest:
-                        list_paths.append((path + [neighb[0]],max(node[1],powermin)))
-                    else:
-                        explo.append(((neighb[0],max(node[1],powermin)), path + [neighb[0]]))
-        if list_paths==[]:
-            return None
-        else :
-            mini= float('inf')
-            for chm in list_paths : #loop to recover the minimum power
-                if chm[1]<= mini :
-                    mini=chm[1]
-                    path_result = chm
-
-            return path_result[0],path_result[1]
+        list_power= sorted(self.powers)
+        x = 0
+        y = len(list_power)-1
+        m= (x+y)//2
+        while x<y : 
+            #print(x,y,m)
+            if self.get_path_with_power(src,dest,list_power[m]) != None :
+                y=m
+            else :
+                x=m +1
+            m= (x+y)//2
+        pth = self.get_path_with_power(src,dest,list_power[x])
+        puiss = list_power[x]
+        return pth,puiss
 
 
 
@@ -237,10 +229,31 @@ def graph_from_file_bis(filename):
         if len(line)==3 :
             node1, node2, power_min= map(int,line)
             g.add_edge(node1, node2, power_min) # will add dist=1 by default
+            g.powers.append(power_min)
         elif len(line)==4 :
             #print(map(int,line))
             node1, node2, power_min, dist= map(int,line)
             g.add_edge(node1, node2, power_min, dist)
+            g.powers.append(power_min)
         else :
                 raise Exception("Incorrecte format")
+       
     return g
+
+
+def possible_path(self,source,destination):
+    """
+    This function allows you to check if it is possible to find a path between 
+    two nodes thanks to the connected components. 
+    /!\ CAUTION /!\  : 
+        If the graph is too large, it is assumed that there is always a path 
+        between two nodes and therefore this function should not be used
+    -----------------    
+    Output :
+    pos_path (Bool) : True or False
+    """
+    pos_path = False
+    for comp in self.connected_components_set(G):
+        if source in comp and dest in comp:
+            pos_path = True
+            return pos_path
