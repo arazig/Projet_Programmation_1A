@@ -2,7 +2,7 @@
 # calculate (using the code developed in Graph.py) the minimum
 # power (and the associated path) over all the paths for each of the given routes.x.in files.
 
-from graph import Graph, graph_from_file, graph_from_file_bis
+from graph import Graph, graph_from_file, graph_from_file_Routes
 import time
 from random import randint
 import sys
@@ -22,7 +22,7 @@ def mean(L=[]):
 
 for x in range(1,11):
     data_path= "input/"
-    g= graph_from_file_bis(data_path + 'routes'+str(x)+'.in')
+    g= graph_from_file_Routes(data_path + 'routes.'+str(x)+'.in')
     Time=[]
     for _ in range(0,10):
         # Choice of parameters :
@@ -37,6 +37,6 @@ for x in range(1,11):
         print("Trajet : "+str(src)+ " ----> " + str(dest)+ "\n t = "+ str(t))
         Time.append(t)
 
-    print(' INPUT : routes'+str(x)+'.in'+"Le temps moyen d'execution de min_power est : "+str(mean(Time)))
+    print(' INPUT : routes.'+str(x)+'.in '+"Le temps moyen d'execution de min_power est : "+str(mean(Time)))
     nbr_trajets = 1
     print("Approximation du temps necessaire pour l'ensemble des trajets est : "+ str(mean(Time)*nbr_trajets))
