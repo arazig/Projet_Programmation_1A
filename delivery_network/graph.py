@@ -24,7 +24,7 @@ class Graph:
         nodes: list, optional
             A list of nodes. Default is empty.
         """
-        self.nodes = nodes
+        self.nodes = list(nodes)
         self.graph = dict([(n, []) for n in nodes])
         self.nb_nodes = len(nodes)
         self.nb_edges = 0
@@ -183,7 +183,7 @@ class Graph:
                 x = m + 1
             m = (x+y)//2
         pth = self.get_path_with_power(src, dest, list_power[x])
-        puiss = list_power[x]
+        puiss = list_power[x] if pth != None else None
         return pth, puiss
 
 
@@ -257,12 +257,8 @@ def graph_from_file_Routes(filename):
         for line in lines[0::] :
             line = line.split()
             if len(line)==3 :
-                node1, node2, power_min= map(int,line)
-                g.add_edge(node1, node2, power_min) # will add dist=1 by default
-                g.powers.append(power_min)
-            elif len(line)==4 :
-                node1, node2, power_min, dist= map(float,line)
-                g.add_edge(int(node1), int(node2), int(power_min), dist)
+                node1, node2, power_min= map(float,line)
+                g.add_edge(int(node1), int(node2), power_min) # will add dist=1 by default
                 g.powers.append(power_min)
             else :
                     raise Exception("Incorrecte format")
