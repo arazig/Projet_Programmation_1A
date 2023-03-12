@@ -128,6 +128,35 @@ class Graph:
                         explo.append((neighb[0], path + [neighb[0]]))
                         visited[neighb[0]] = True
         return None if list_paths == [] else list_paths[0]
+
+
+    def count_paths(self, start, end):
+        # Initialisation de la variable compteur
+        count = 0
+        # Création d'une pile pour stocker les sommets à visiter
+        stack = [start]
+        # Création d'un dictionnaire pour stocker les sommets visités
+        visited = {start: True}
+
+        while stack:
+            # Pop le sommet en haut de la pile
+            node = stack.pop()
+            # Si le sommet est le sommet final, incrémenter le compteur
+            if node == end:
+                count += 1
+            # Sinon, ajouter tous les voisins non visités à la pile
+            else:
+                n_neigh = [self.graph[node][j] for j in range(0, len(self.graph[node]))] 
+                for neighbor in n_neigh:
+                    if neighbor not in visited:
+                        stack.append(neighbor)
+                        visited[neighbor] = True
+
+        # Retourner le compteur
+        return count
+
+
+
     
     def min_power(self, src, dest):
         """     
@@ -232,9 +261,8 @@ def graph_from_file_Routes(filename):
                 g.add_edge(node1, node2, power_min) # will add dist=1 by default
                 g.powers.append(power_min)
             elif len(line)==4 :
-                #print(map(int,line))
-                node1, node2, power_min, dist= map(int,line)
-                g.add_edge(node1, node2, power_min, dist)
+                node1, node2, power_min, dist= map(float,line)
+                g.add_edge(int(node1), int(node2), int(power_min), dist)
                 g.powers.append(power_min)
             else :
                     raise Exception("Incorrecte format")

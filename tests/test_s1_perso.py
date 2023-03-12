@@ -24,8 +24,8 @@ class Test_Perso(unittest.TestCase):
    def test_network0_minpower(self):
         g = graph_from_file("input/network.00.in")
         self.assertEqual(g.min_power(6, 5)[1], 12)
-        self.assertEqual(g.get_path_with_power(6, 5, g.min_power(6, 5)[1]-1), None) 
         #if the power of the truck is less than the minimum power, the function should return None
+        self.assertEqual(g.get_path_with_power(6, 5, g.min_power(6, 5)[1]-1), None) 
         self.assertEqual(g.get_path_with_power(6, 5, g.min_power(6, 5)[1]), g.min_power(6, 5)[0])
 
 if __name__ == '__main__':
