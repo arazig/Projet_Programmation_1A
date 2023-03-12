@@ -29,10 +29,28 @@ for x in range(1,11):
 
         t0 = time.perf_counter()
         Graph.min_power(g, src, dest)
-        t1 = time.perf_counter()       
+        t1 = time.perf_counter()
 
         t = t1 - t0  # difference between the times before and after execution of the function
         l_time.append(t)
 
-    print(' INPUT => routes.'+str(x)+'.in, '+" The average time is : "+str(mean(l_time))+'\n')
+    print(' INPUT => routes.'+str(x)+'.in, '+" The average time is : "+str(mean(l_time)))
     print(" Approximation of the time needed for all trips is: "+ str(mean(l_time)*nbr_trajets) + ' secondes \n')
+
+""" RESULT OF THE PROGRAMME :
+
+INPUT => routes.6.in,  The average time is : 38.711043321405306
+ Approximation of the time needed for all trips is: 193.55521660702652 secondes 
+
+ INPUT => routes.7.in,  The average time is : 17.713787204399704
+ Approximation of the time needed for all trips is: 88.56893602199852 secondes 
+
+ INPUT => routes.8.in,  The average time is : 24.75009866579785
+ Approximation of the time needed for all trips is: 123.75049332898925 secondes 
+
+ INPUT => routes.9.in,  The average time is : 6.035689906193875
+ Approximation of the time needed for all trips is: 30.178449530969374 secondes 
+
+ INPUT => routes.10.in,  The average time is : 42.48826046480099
+ Approximation of the time needed for all trips is: 212.44130232400494 secondes 
+"""
