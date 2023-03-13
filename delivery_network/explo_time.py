@@ -2,7 +2,7 @@
 # calculate (using the code developed in Graph.py) the minimum
 # power (and the associated path) over all the paths for each of the given routes.x.in files.
 
-from graph import Graph, graph_from_file, graph_from_file_Routes
+from graph import Graph, graph_from_file
 import time
 from random import randint
 import sys
@@ -18,6 +18,9 @@ def mean(L):
      
 
 def time_explo(x):
+    """
+    x index of teh file in the format network.x.in and routes.x.in
+    """
     data_path = "input/"
     g = graph_from_file(data_path + 'network.'+str(x)+'.in')
     route_file = data_path + 'routes.'+ str(x) + '.in'
@@ -40,62 +43,41 @@ def time_explo(x):
                 l_time.append(t)
             else :
                     raise Exception("Incorrecte format")
-        print(' INPUT => routes.'+str(x)+'.in, '+" The average time is : "+str(mean(l_time)+' secondes'))
-        print(" Approximation of the time needed for all trips is: "+ str(mean(l_time)*n) + ' secondes, càd '+str(mean(l_time)*n/3600)+' heures.' \n')
+        print(' INPUT => routes.' + str(x) + '.in, ' + " The average time is : " + str(mean(l_time)) + ' secondes')
+        print(" Approximation of the time needed for all trips is: "+ str(mean(l_time)*n) + ' secondes, càd '+str(mean(l_time)*n/3600)+' heures. \n')
 
 
-for x in range(1,11):
+for x in range(10,11):
     time_explo(x)
-"""
-for x in range(1,11):
-    data_path = "input/"
-    g = graph_from_file_Routes(data_path + 'routes.'+str(x)+'.in')
-    l_time = []
-    nbr_trajets = 5
-    for _ in range(0,nbr_trajets):
-        # Choice of parameters :
-        src = randint(1, g.nb_nodes)
-        dest = randint(1, g.nb_nodes)
 
-        t0 = time.perf_counter()
-        Graph.min_power(g, src, dest)
-        t1 = time.perf_counter()
-
-        t = t1 - t0  # difference between the times before and after execution of the function
-        l_time.append(t)
-
-    print(' INPUT => routes.'+str(x)+'.in, '+" The average time is : "+str(mean(l_time)))
-    print(" Approximation of the time needed for all trips is: "+ str(mean(l_time)*nbr_trajets) + ' secondes \n')
-"""
 """ RESULT OF THE PROGRAM:
-INPUT => routes.1.in,  The average time is : 0.0001272825989872217
-Approximation of the time needed for all trips is: 0.0006364129949361086 secondes
+ INPUT => routes.1.in,  The average time is : 0.0005744263995438814 secondes
+ Approximation of the time needed for all trips is: 0.0804196959361434 secondes, càd 2.23388044267065e-05 heures. 
 
-INPUT => routes.2.in,  The average time is : 3.7666614988062066
-Approximation of the time needed for all trips is: 18.833307494031033 secondes 
+ INPUT => routes.2.in,  The average time is : 3.509813237603521 secondes
+ Approximation of the time needed for all trips is: 350981.3237603521 secondes, càd 97.49481215565336 heures. 
 
-INPUT => routes.3.in,  The average time is : 23.87172478159773
-Approximation of the time needed for all trips is: 119.35862390798866 secondes
+ INPUT => routes.3.in,  The average time is : 8.231395321595482 secondes
+ Approximation of the time needed for all trips is: 4115697.660797741 secondes, càd 1143.2493502215946 heures. 
 
-INPUT => routes.4.in,  The average time is : 11.767614766198676
-Approximation of the time needed for all trips is: 58.83807383099338 secondes 
+ INPUT => routes.4.in,  The average time is : 17.89923995300196 secondes
+ Approximation of the time needed for all trips is: 8949619.97650098 secondes, càd 2486.00554902805 heures. 
 
-INPUT => routes.5.in,  The average time is : 0.2704593005997594
-Approximation of the time needed for all trips is: 1.3522965029987972 secondes
+ INPUT => routes.5.in,  The average time is : 26.270301272196228 secondes
+ Approximation of the time needed for all trips is: 2627030.127219623 secondes, càd 729.7305908943397 heures. 
 
-INPUT => routes.6.in,  The average time is : 38.711043321405306
-Approximation of the time needed for all trips is: 193.55521660702652 secondes 
+ INPUT => routes.6.in,  The average time is : 21.715683386602905 secondes
+ Approximation of the time needed for all trips is: 10857841.693301452 secondes, càd 3016.067137028181 heures. 
 
-INPUT => routes.7.in,  The average time is : 17.713787204399704
-Approximation of the time needed for all trips is: 88.56893602199852 secondes 
+ INPUT => routes.7.in,  The average time is : 24.826700999808963 secondes
+ Approximation of the time needed for all trips is: 12413350.499904482 secondes, càd 3448.1529166401338 heures. 
 
-INPUT => routes.8.in,  The average time is : 24.75009866579785
-Approximation of the time needed for all trips is: 123.75049332898925 secondes 
+ INPUT => routes.8.in,  The average time is : 16.14622365120449 secondes
+ Approximation of the time needed for all trips is: 8073111.8256022455 secondes, càd 2242.5310626672904 heures. 
 
-INPUT => routes.9.in,  The average time is : 6.035689906193875
-Approximation of the time needed for all trips is: 30.178449530969374 secondes 
+ INPUT => routes.9.in,  The average time is : 17.577709830593086 secondes
+ Approximation of the time needed for all trips is: 8788854.915296543 secondes, càd 2441.348587582373 heures. 
 
-INPUT => routes.10.in,  The average time is : 42.48826046480099
-Approximation of the time needed for all trips is: 212.44130232400494 secondes
-
+(base) MacBook-Air-de-Amine:Projet_Programmation_1A aminerazig$ 
+ Approximation of the time needed for all trips is: 8616705.526804434 secondes, càd 2393.529313001232 heures.
 """
