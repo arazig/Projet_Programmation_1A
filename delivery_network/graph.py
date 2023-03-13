@@ -1,3 +1,5 @@
+from collections import deque
+
 class Graph:
     """
     A class representing graphs as adjacency lists and implementing various algorithms on the graphs. Graphs in the class are not oriented. 
@@ -69,30 +71,53 @@ class Graph:
         self.graph[node1].append((node2, power_min, dist))  # On ajoute la relation a partir de la 1ere extremité de l'arrete 
         self.graph[node2].append((node1, power_min, dist))  # On ajoute également de l'autre coté ( vice versa)
         self.nb_edges += 1
-      
+    """ 
+        def connected_components(self):
+            # création d'un dictionnaire permettant de voir si un noeud est visité
+            visited = {i: False for i in self.nodes} 
+
+            def exploration(s):
+                # this function return all the nodes of a graph explorated from an initial one
+                L = [s]  # list of the connected nodes
+                s_neigh = [self.graph[s][j][0] for j in range(0, len(self.graph[s]))]  # list of the node's neighbours
+                for neigh in s_neigh: 
+                    if not visited[neigh]:  # for each neighbor not visited
+                        visited[neigh] = True
+                        L = L + exploration(neigh)
+                return L
+
+            Components = []
+            N = self.nodes
+            for node in N:
+                if visited[node] is False:
+                    Components.append(exploration(node))
+            return Components
+        """
+
+    def bfs(self,start_node, visited):
+        component = []
+        queue = deque([start_node])
+        visited[start_node] = True
+        while queue:
+            node = queue.popleft()
+            component.append(node)
+            for neighbor in self.graph[node]:
+                if not visited[neighbor[0]]:
+                    visited[neighbor[0]] = True
+                    queue.append(neighbor[0])
+        return component   
+
     def connected_components(self):
         """
         return a list of all the conected components of a graph
         """
-        # création d'un dictionnaire permettant de voir si un noeud est visité
-        visited = {i: False for i in self.nodes} 
-
-        def exploration(s):
-            # this function return all the nodes of a graph explorated from an initial one
-            L = [s]  # list of the connected nodes
-            s_neigh = [self.graph[s][j][0] for j in range(0, len(self.graph[s]))]  # list of the node's neighbours
-            for neigh in s_neigh: 
-                if not visited[neigh]:  # for each neighbor not visited
-                    visited[neigh] = True
-                    L = L + exploration(neigh)
-            return L
-
-        Components = []
-        N = self.nodes
-        for node in N:
-            if visited[node] is False:
-                Components.append(exploration(node))
-        return Components
+        visited = {node:False for node in self.nodes}
+        components = []
+        for node in self.nodes:
+            if not visited[node]:
+                component = self.bfs(node, visited)
+                components.append(component)
+        return components
 
 
     def connected_components_set(self):
