@@ -1,5 +1,5 @@
 from collections import deque
-
+from union_find import *
 class Graph:
     """
     A class representing graphs as adjacency lists and implementing various algorithms on the graphs. Graphs in the class are not oriented. 
@@ -31,6 +31,7 @@ class Graph:
         self.nb_nodes = len(nodes)
         self.nb_edges = 0
         self.powers = []
+        self.edges = []
 
     def __str__(self):
         """Prints the graph as a list of neighbors for each node (one per line)"""
@@ -212,6 +213,23 @@ class Graph:
         return pth, puiss
 
 
+    def possible_path(self, source, destination):
+        """
+        This function allows you to check if it is possible to find a path between
+        two nodes thanks to the connected components.
+        /!\ CAUTION /!\  :
+            If the graph is too large, it is assumed that there is always a path
+            between two nodes and therefore this function should not be used
+        -----------------
+        Output :
+        pos_path (Bool) : True or False
+        """
+        pos_path = False
+        for comp in self.connected_components_set():
+            if source in comp and destination in comp:
+                pos_path = True
+                return pos_path
+
 def graph_from_file(filename):
     """
     Reads a text file and returns the graph as an object of the Graph class.
@@ -240,53 +258,15 @@ def graph_from_file(filename):
             if len(edge) == 3:
                 node1, node2, power_min = int(edge[0]), int(edge[1]), int(edge[2])
                 g.add_edge(node1, node2, power_min)  # will add dist=1 by default
-                # g.edges.append((node1, node2, power_min, 1))
-                g.powers.append(power_min)
+                g.powers.append(power_min)  # creating a list of all the graph's powers
+                g.edges.append((node1, node2, power_min))  # add to edges list all the edges
             elif len(edge) == 4:
                 node1, node2, power_min, dist = int(edge[0]), int(edge[1]), int(edge[2]), float(edge[3])  #Pour pouvoir lire 10
                 g.add_edge(node1, node2, power_min, dist)
-                #g.edges.append((node1, node2, power_min, dist))
                 g.powers.append(power_min)
+                g.edges.append((node1, node2, power_min)) # add to the list all the edges
             else:
                 raise Exception("Format incorrect")
-    return g
-
-def graph_from_file_Routes(filename):
-    """
-    Reads a text file and returns the graph as an object of the Graph class.
-
-    The file should have the following format: 
-        The first line of the file is 'n m'
-        The next m lines have 'node1 node2 power_min dist' or 'node1 node2 power_min' (if dist is missing, it will be set to 1 by default)
-        The nodes (node1, node2) should be named 1..n
-        All values are integers.
-
-    Parameters: 
-    -----------
-    filename: str
-        The name of the file
-
-    Outputs: 
-    -----------
-    g: Graph
-        An object of the class Graph with the graph from file_name.
-    """
-    with open(filename, "r") as file:
-        first_line = file.readline().split()
-        if len(first_line) == 2 :
-            n, m = int(first_line[0]), int(first_line[1])
-        elif len(first_line) == 1 :
-            n = int(first_line[0])
-        g = Graph(range(1,n+1))
-        lines =file.readlines() # c'est une liste de lignes ["1 2 3","2 3 5"]
-        for line in lines[0::] :
-            line = line.split()
-            if len(line)==3 :
-                node1, node2, power_min= map(float,line)
-                g.add_edge(int(node1), int(node2), power_min) # will add dist=1 by default
-                g.powers.append(power_min)
-            else :
-                    raise Exception("Incorrecte format")
     return g
 
 
@@ -308,3 +288,19 @@ def possible_path(self, source, destination):
         if source in comp and destination in comp:
             pos_path = True
             return pos_path
+
+def kruskal(self):
+    # Sort edges by increasing weight
+    edges = self.edges
+    edges = sorted(edges, key=lambda edg:edg[2])
+
+    # Initialize disjoint set for tracking components
+    dij_set = UnionFind(self.nb_nodes) # nombre de sommets
+
+    span_tree = Graph([])  # creation of an empty graph for the spanning tree
+    for src, dest, weight in edges:
+        if dij_set.find(src) != dij_set.find(dest):  # if they haven't got the same representante
+            dij_set.Union(src, dest) # we merge the two sets
+            span_tree.add_edge(src, dest, weight)  # we add the adge to teh span tree
+
+    return span_tree
