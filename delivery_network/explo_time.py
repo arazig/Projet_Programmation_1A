@@ -50,7 +50,8 @@ def time_explo(x):
 for x in range(10,11):
     time_explo(x)
 
-""" RESULT OF THE PROGRAM:
+""" RESULT OF THE PROGRAM: ( note: 3000 hours is equivalent to approximately 83 days) 
+
  INPUT => routes.1.in,  The average time is : 0.0005744263995438814 secondes
  Approximation of the time needed for all trips is: 0.0804196959361434 secondes, càd 2.23388044267065e-05 heures. 
 
@@ -78,6 +79,6 @@ for x in range(10,11):
  INPUT => routes.9.in,  The average time is : 17.577709830593086 secondes
  Approximation of the time needed for all trips is: 8788854.915296543 secondes, càd 2441.348587582373 heures. 
 
-(base) MacBook-Air-de-Amine:Projet_Programmation_1A aminerazig$ 
- Approximation of the time needed for all trips is: 8616705.526804434 secondes, càd 2393.529313001232 heures.
+INPUT => routes.10.in,  The average time is : 16.519155103800585 secondes
+ Approximation of the time needed for all trips is: 8259577.551900293 secondes, càd 2294.3270977500815 heures. 
 """
