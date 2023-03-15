@@ -361,7 +361,7 @@ def tree_min_power(or_tree, src, dest):
             while inprog != 1 : # we actualise the in progress node until it's equal to the root
                 ancest.append([inprog, int(or_tree[inprog][0][1])]) # we stock each parents in an ancestor list
                 inprog = or_tree[inprog][0][0]
-            ancest.append([1,-1])  # add the root with a negative weight
+            ancest.append([1,0])  # add the root with a negative weight
             list_ancest.append(ancest)  # a list of two list of ancestors for each src and dest
 
         src_ancest = list_ancest[0]
