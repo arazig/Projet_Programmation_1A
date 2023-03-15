@@ -72,30 +72,19 @@ class Graph:
         self.graph[node1].append((node2, power_min, dist))  # On ajoute la relation a partir de la 1ere extremité de l'arrete 
         self.graph[node2].append((node1, power_min, dist))  # On ajoute également de l'autre coté ( vice versa)
         self.nb_edges += 1
-    """ 
-        def connected_components(self):
-            # création d'un dictionnaire permettant de voir si un noeud est visité
-            visited = {i: False for i in self.nodes} 
 
-            def exploration(s):
-                # this function return all the nodes of a graph explorated from an initial one
-                L = [s]  # list of the connected nodes
-                s_neigh = [self.graph[s][j][0] for j in range(0, len(self.graph[s]))]  # list of the node's neighbours
-                for neigh in s_neigh: 
-                    if not visited[neigh]:  # for each neighbor not visited
-                        visited[neigh] = True
-                        L = L + exploration(neigh)
-                return L
-
-            Components = []
-            N = self.nodes
-            for node in N:
-                if visited[node] is False:
-                    Components.append(exploration(node))
-            return Components
-        """
 
     def bfs(self,start_node, visited):
+        """
+        To explore a graph or tree by examining all the nodes on one level before
+         moving on to the nodes on the next level.
+         We use this function in the search of the graph's connected componnets
+        Agrs:
+            start_node(int):
+            visited(dict):
+        Output:
+            component(list)
+        """
         component = []
         queue = deque([start_node])
         visited[start_node] = True
@@ -157,6 +146,12 @@ class Graph:
 
 
     def count_paths(self, start, end):
+        """
+        Function for counting the number of path between 2 nodes in a Graph
+        Args:
+            start(int) : starting node
+            end(int) : ending node
+        """
         # Initialisation de la variable compteur
         count = 0
         # Création d'une pile pour stocker les sommets à visiter
@@ -186,7 +181,7 @@ class Graph:
     
     def min_power(self, src, dest):
         """     
-        calculates, for a given journey t, by a dichotomic method the minimum power of
+        calculates, for a given journey t, by a dichotomic method the minimal power of
         a truck that can cover a given journey.
         Return a path and the minimal power.
 
@@ -279,6 +274,7 @@ def possible_path(self, source, destination):
     /!\ CAUTION /!\  :
         If the graph is too large, it is assumed that there is always a path
         between two nodes and therefore this function should not be used
+        Not optimized solution
     -----------------
     Output :
     pos_path (Bool) : True or False
@@ -290,17 +286,100 @@ def possible_path(self, source, destination):
             return pos_path
 
 def kruskal(self):
+    """
+    This function allows to create a spanning tree of minimal weight from a Graph
+    Agrs:
+        self(Graph) : a graph
+    Output: 
+        span_tree(Graph) : an acyclic and connected graph (self's spanning tree)
+    """
     # Sort edges by increasing weight
     edges = self.edges
     edges = sorted(edges, key=lambda edg:edg[2])
 
     # Initialize disjoint set for tracking components
     dij_set = UnionFind(self.nb_nodes) # nombre de sommets
-
     span_tree = Graph([])  # creation of an empty graph for the spanning tree
+    # il faut remplir la liste UnionFind.parents
     for src, dest, weight in edges:
         if dij_set.find(src) != dij_set.find(dest):  # if they haven't got the same representante
             dij_set.Union(src, dest) # we merge the two sets
-            span_tree.add_edge(src, dest, weight)  # we add the adge to teh span tree
+            span_tree.add_edge(src, dest, weight)  # we add the adge to the span tree
 
     return span_tree
+
+def oriented_tree_construction(self, root=1):
+    """
+    This function allows the construction of an oriented tree with parent-child relationships 
+    A root must be chosen as a parameter. It corresponds to the common ancestor of all nodes
+    By default, the root is 1.
+
+    args:
+        self (graph): a spanning tree
+        root (int): global common ancestor
+    output:
+        or_tree (dict): an oriented tree
+    """
+    # Construire un arbre orienté des enfants vers les parents
+    or_tree = {root: []}
+    queue = deque([root])
+    visited = {root}
+    while queue:
+        parent = queue.popleft()
+        for child in self.graph[parent]:
+            if child[0] not in visited:
+                visited.add(child[0])
+                or_tree[child[0]] = [(parent,child[1],child[2])]
+                queue.append(child[0])
+    return or_tree
+
+def tree_min_power(or_tree, src, dest):
+    """     
+    calculates, from a oriented sapnning tree, the minimal power of a truck that can cover 
+    a given journey (src --> dest). Return a path and the minimal power.
+
+    The objective here is to find a path in the most optimised way possible 
+    the tree being acyclic and connected the path is unique. 
+    The idea is to trace the graph back to the common ancestor of the two nodes
+
+    Args:
+        or_tree (dict): oriented tree
+        src (int): source, starting node
+        dest (int): destinantion
+    --------
+    Output :
+        path (list)
+        min_power (int)
+    """
+
+    try:  # Add a condition to make sure that the trip can be done
+        trip = [src, dest]
+        list_ancest = []
+        for nd in trip :  # for source and destination
+            ancest = []
+            inprog = nd
+            while inprog != 1 : # we actualise the in progress node until it's equal to the root
+                ancest.append([inprog, int(or_tree[inprog][0][1])]) # we stock each parents in an ancestor list
+                inprog = or_tree[inprog][0][0]
+            ancest.append([1,-1])  # add the root with a negative weight
+            list_ancest.append(ancest)  # a list of two list of ancestors for each src and dest
+
+        src_ancest = list_ancest[0]
+        dest_ancest = list_ancest[1]
+        #  find the index of the 1st common ancestor of dest and source
+        i = len(src_ancest) - 1
+        j = len(dest_ancest) - 1
+        #  we go through the list of ancestors starting from the root
+        while i >= 0 and j >= 0 and dest_ancest[j][0] == src_ancest[i][0] :
+            i = i - 1
+            j = j - 1
+        #  then merging the paths to the common ancestor
+        path = src_ancest[:i+2]
+        path[i+1][1] = -1 
+        path.extend(reversed(dest_ancest[:j+1]))
+        pth, minpower= [node[0] for node in path], max([pwr[1] for pwr in path])
+        return pth,minpower
+
+    except KeyError:  # raise an exception if on of the nodes does not exist
+        print(" /!\ warning : one of the parameters nodes is not in the oriented tree")
+        return None
