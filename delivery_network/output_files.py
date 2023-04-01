@@ -15,27 +15,27 @@ sys.setrecursionlimit(5000000)
 directory_path_out = "/Users/aminerazig/Desktop/ENSAE 1A/INFO/Projet_Programmation_1A/output/"
 directory_path_in = "/Users/aminerazig/Desktop/ENSAE 1A/INFO/Projet_Programmation_1A/input/"
 
-x=10  # for each routes file
-output_file = "routes." + str(x)
-input_file = "network." + str(x)
+for x in range (1,11):  # for each routes file
+    output_file = "routes." + str(x)
+    input_file = "network." + str(x)
 
-g = graph_from_file((directory_path_in + input_file + ".in"))
-or_tree = oriented_tree_construction(kruskal(g))
-with open(directory_path_out + output_file + ".out", "w") as out:
-    with open(directory_path_in + output_file + ".in", "r") as f :
-        n = f.readline().split()
-        n = int(n[0]) # numbers of trips
-        for _ in range(0,n-1):
+    g = graph_from_file((directory_path_in + input_file + ".in"))
+    or_tree = oriented_tree_construction(kruskal(g))
+    with open(directory_path_out + output_file + ".out", "w") as out:
+        with open(directory_path_in + output_file + ".in", "r") as f :
+            n = f.readline().split()
+            n = int(n[0]) # numbers of trips
+            for _ in range(0,n-1):
+                trip = f.readline().split()
+                src, dest, weight = map(float, trip)
+                min_power = tree_min_power(or_tree, int(src), int(dest))[1]
+
+                out.write(str(min_power) + "\n")
+            # added manually the last line     
             trip = f.readline().split()
             src, dest, weight = map(float, trip)
             min_power = tree_min_power(or_tree, int(src), int(dest))[1]
-
-            out.write(str(min_power) + "\n")
-        # added manually the last line     
-        trip = f.readline().split()
-        src, dest, weight = map(float, trip)
-        min_power = tree_min_power(or_tree, int(src), int(dest))[1]
-        out.write(str(min_power))
+            out.write(str(min_power))
 
 """
 with open(output_file + ".out", "w") as out:
