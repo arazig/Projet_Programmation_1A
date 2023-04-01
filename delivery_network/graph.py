@@ -84,6 +84,7 @@ class Graph:
             visited(dict):
         Output:
             component(list)
+        The complexity of the BFS is on O(V+E)
         """
         component = []
         queue = deque([start_node])
@@ -100,12 +101,14 @@ class Graph:
     def connected_components(self):
         """
         return a list of all the conected components of a graph
+        the complexity of the function is O(V*(V+E)) because 
+        it performs the O(V+E) complexity operation of bfs V times.
         """
         visited = {node:False for node in self.nodes}
         components = []
-        for node in self.nodes:
+        for node in self.nodes: # for the complexity => we make at most V operation
             if not visited[node]:
-                component = self.bfs(node, visited)
+                component = self.bfs(node, visited) # => BFS make V+E operation
                 components.append(component)
         return components
 
@@ -127,8 +130,13 @@ class Graph:
             src (int): source, starting node
             dest (int): destinantion
             power (int): power of the truck
+
+        Complexity : 
+            If V is the number of the graph's nodes and E the number of edges. 
+            Our function is based on a BFS algo, which explores the nodes of the graph in 
+            the order of their distance from the source node. So the complexity is in O(V+E).
         """
-        explo = [(src, [src])]
+        explo = [(src, [src])]  
         list_paths = []  # list of the paths between the nodes
         visited = {i: False for i in self.nodes}
         while explo:
@@ -177,8 +185,51 @@ class Graph:
         return count
 
 
+    """
+    def dijkstra(self, src, dest, power):
+        
+        #This function return two dictionary with distance to the source and neighbourhood.
+        
+        precedent= {i:None for i in self.nodes}
+        traiter= {j:False for j in self.nodes}
+        distance= {k:float('inf') for k in self.nodes}  
+        distance[src] = 0
+        a_traiter = [(0, src)]
+        while a_traiter: 
+            dist_noeud, noeud= a_traiter.pop()
+            if not traiter[noeud] :
+                traiter[noeud] = True
+                neigh = [self.graph[noeud][j] for j in range(0,len(self.graph[noeud]))]
+                for voisin in neigh:
+                    powermin = voisin[1]
+                    if power >= powermin:
+                        dist_voisin = dist_noeud + voisin[2]
+                        if dist_voisin < distance[voisin[0]]:
+                            distance[voisin[0]] = dist_voisin
+                            precedent[voisin[0]] = noeud
+                            a_traiter.append((dist_voisin, voisin[0]))
+            a_traiter.sort(reverse=True) 
+        return distance, precedent                    
+        
+    def min_distance_dijkstra(self, src, dest, power):
+        
+        #This function return the minimal distance between src and dest for a given power
+        #based on dijkstra function
+        
+        if self.get_path_with_power(src, dest, 'inf') != None:
+            d, p = self.dijkstra(src, dest, power)
+            if p[dest] == None:
+                return None
+            else:
+                T = [dest]
+                i= dest 
+                while i != src:
+                    T.append(p[i])
+                    i= p[i]
+            T.reverse()    
+        return T
+    """
 
-    
     def min_power(self, src, dest):
         """     
         calculates, for a given journey t, by a dichotomic method the minimal power of
@@ -187,10 +238,14 @@ class Graph:
 
         Args:
             src (int): source, starting node
-            dest (int): destinantion
+            dest (int): destination
         Output :
         path (list)
         min_power (int)
+
+        complexity : The time complexity of this function is O(Vlog V), where V is the number
+          of nodes in the graph, because for each node pair (src, dest), it performs a dichotomic
+          search over the sorted list of truck powers.
         """
         list_power = sorted(self.powers)
         x = 0
@@ -292,13 +347,14 @@ def kruskal(self):
         self(Graph) : a graph
     Output: 
         span_tree(Graph) : an acyclic and connected graph (self's spanning tree)
+    complexity : O(E log E) 
     """
     # Sort edges by increasing weight
     edges = self.edges
-    edges = sorted(edges, key=lambda edg:edg[2])
+    edges = sorted(edges, key=lambda edg:edg[2]) # O(Elog(E)) where E is the nb of edges
 
     # Initialize disjoint set for tracking components
-    dij_set = UnionFind(self.nb_nodes) # nombre de sommets
+    dij_set = UnionFind(self.nb_nodes) # nombre de sommets , O(log V)
     span_tree = Graph([])  # creation of an empty graph for the spanning tree
     # il faut remplir la liste UnionFind.parents
     for src, dest, weight in edges:
@@ -350,6 +406,10 @@ def tree_min_power(or_tree, src, dest):
     Output :
         path (list)
         min_power (int)
+    
+    Complexity : in the worst case, the two nodes are in each extremity of the graph,
+    so we visit all the node of the orriented spanning tree. so the complexity of the function in on O(V) 
+    with V the numbers of nodes.
     """
 
     try:  # Add a condition to make sure that the trip can be done
@@ -361,7 +421,7 @@ def tree_min_power(or_tree, src, dest):
             while inprog != 1 : # we actualise the in progress node until it's equal to the root
                 ancest.append([inprog, int(or_tree[inprog][0][1])]) # we stock each parents in an ancestor list
                 inprog = or_tree[inprog][0][0]
-            ancest.append([1,0])  # add the root with a negative weight
+            ancest.append([1,-1])  # add the root with a negative weight
             list_ancest.append(ancest)  # a list of two list of ancestors for each src and dest
 
         src_ancest = list_ancest[0]
@@ -375,7 +435,7 @@ def tree_min_power(or_tree, src, dest):
             j = j - 1
         #  then merging the paths to the common ancestor
         path = src_ancest[:i+2]
-        path[i+1][1] = -1 
+        path[i+1][1] = 0
         path.extend(reversed(dest_ancest[:j+1]))
         pth, minpower= [node[0] for node in path], max([pwr[1] for pwr in path])
         return pth,minpower
@@ -383,3 +443,6 @@ def tree_min_power(or_tree, src, dest):
     except KeyError:  # raise an exception if on of the nodes does not exist
         print(" /!\ warning : one of the parameters nodes is not in the oriented tree")
         return None
+
+
+
