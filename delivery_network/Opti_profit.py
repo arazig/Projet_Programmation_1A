@@ -50,7 +50,8 @@ def trucks_selection(x, Budget = 25*10e9) :
 
                 src, dest, utility = map(int, route.readline().split())
                 pwr = int(power.readline())
-                Trajets.append((src, dest, utility, pwr))
+                Trajets.append((src, dest, utility, pwr)) 
+                #  il est aussi possible de calculer directement pwr a chaque itération sans passer par lecture des fichier powermin
 
     Trucks = []      
     with open(trucks_file, "r") as trucks :   
@@ -104,6 +105,44 @@ tant que le budget est positif >0 :
 """
 
 
-#################################################################
-#######  2nd METHODE : Une sollution optimale du problème    ####
-#################################################################
+############################################################################
+#######  2nd METHODE : Une sollution optimale du problème  (dynamique)  ####
+############################################################################
+
+# Tout d'abord, on recupere l'utilité max que peut generer chaque camion du catalogue
+x=1
+# recupération des fichiers 
+route_file = 'input/routes.' + str(x) + '.in'
+powermin_file = 'input/powermin.' + str(x) + '.in'
+trucks_file = 'input/trucks.' + str(x) + '.in'
+
+Selection = [] 
+# Ouverture des fichier et stockage des valeurs dans des listes
+Trajets = []
+with open(route_file, "r") as route :
+    with open(powermin_file, "r") as power :
+        n = int(route.readline())
+        for _ in range(n):
+
+            src, dest, utility = map(int, route.readline().split())
+            pwr = int(power.readline())
+            Trajets.append((src, dest, utility, pwr)) 
+            #  il est aussi possible de calculer directement pwr a chaque itération sans passer par lecture des fichier powermin
+
+Trucks = []      
+with open(trucks_file, "r") as trucks :   
+    nb_trucks = trucks.readline()
+    for _ in range(int(nb_trucks)) :
+        pow, cost = map(int, trucks.readline().split())
+        umax = 0
+        for trj in Trajets :
+            # si la puissance du c&mion est suffisante et que l'utilité est meilleure on actualise l'utilité max
+            if pow >= trj[3] and umax < trj[2] : 
+                umax = trj[2]
+        # on associe à chaque camion l'utilité max qu'il peut rapporter         
+        Trucks.append((pow, cost, umax))
+
+print(Trucks)
+        
+        
+
