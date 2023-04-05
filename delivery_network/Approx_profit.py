@@ -1,3 +1,5 @@
+ 
+# DEFINITION ET IMPORTATIONS
 """
  L' approche théorique la plus instinctive est dans un premier temps de trier les trajets du fichiers
  route par profit décroissant. Ensuite on parcours chacuns des trajets en lui associant le camion qui coute le moins 
@@ -80,25 +82,18 @@ def trucks_selection(x, catalogue, Budget = 2000000000000000) :
 
     return Selection
 
-t0 = time.perf_counter()
-print(trucks_selection(10,2))
-t1 = time.perf_counter()
-t= t1 - t0
-print (str(10)+ ": " + str(t) )
 
-"""
+#  LES TEMPS DE CALCULS
+
 for x in range (1,11):
     t0 = time.perf_counter()
     print(trucks_selection(x,2))
     t1 = time.perf_counter()
     t= t1 - t0
     print (str(x)+ ": " + str(t) )
-"""
-# REMARQUE IL EST TRES UTILE DE CREER UNE FONCTION QUI PERMET DE CALCULER L'utilité obtenue a partir d'une selelction de camion 
-# ou bien de directement la calculer ne emme temps que l'on donne la selection. 
 
+""" Output :
 
-"""
 1: 0.02570429899969895
 2: 1.131312251000054
 3: 129.39552251000168
@@ -108,7 +103,15 @@ for x in range (1,11):
 7: 152.4702746389994
 8: 125.82133894599974
 9: 44.99317726300069
+10: 153.22190753999894
 """
+
+
+# REMARQUE IL EST TRES UTILE DE CREER UNE FONCTION QUI PERMET DE CALCULER L'utilité obtenue a partir d'une selelction de camion 
+# ou bien de directement la calculer ne emme temps que l'on donne la selection. 
+
+
+
 
 
 
