@@ -1,19 +1,16 @@
-from graph import Graph, graph_from_file, graph_from_file_bis
+from graph import Graph, graph_from_file
 import time
 from random import randint
 import sys
 
 sys.setrecursionlimit(5000000)
 data_path = "input/"
-file_name = "routes.2.in"
+file_name = "network.2.in"
 
-g = graph_from_file_bis(data_path + file_name)
-#print(g)
+g = graph_from_file(data_path + file_name)
+print(g)
 
-#for comp in Graph.connected_components_set(g):
-    #print(comp)
-
-print(Graph.get_path_with_power(g, 1220, 35940, 10000000000))
+print(Graph.min_dist_dijkstra(g, 83, 642, 4656695))
 
 """
 # Estimation du temps necessaire pour calculer la puissance minimale ( et le chemin associé) sur l'ensemble
