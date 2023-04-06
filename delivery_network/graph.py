@@ -144,7 +144,7 @@ class Graph:
             n_neigh = [self.graph[node][j] for j in range(0, len(self.graph[node]))]  # list of (node's neighbours,powermin,dist)
             for neighb in n_neigh:
                 powermin = neighb[1]
-                if neighb[0] not in path and power >= powermin:  # for each neighbor accessible (by truck's power) not yet in the path
+                if neighb[0] not in path and float(power) >= float(powermin):  # for each neighbor accessible (by truck's power) not yet in the path
                     if neighb[0] == dest:
                         list_paths.append(path + [neighb[0]])
                     elif not visited[neighb[0]]:
@@ -185,50 +185,46 @@ class Graph:
         return count
 
 
-    """
-    def dijkstra(self, src, dest, power):
+
+    def min_dist_dijkstra(self, src, dest, power):
+        """
+        This function return the minimal distance path between two nodes using a dijsktra algorithm
+        """
         
-        #This function return two dictionary with distance to the source and neighbourhood.
-        
-        precedent= {i:None for i in self.nodes}
-        traiter= {j:False for j in self.nodes}
-        distance= {k:float('inf') for k in self.nodes}  
+        precedent = {i:None for i in self.nodes}  # to see the node before each node
+        traiter = {j:False for j in self.nodes}   # to see if the node is alreadry treated
+        distance = {k:float('inf') for k in self.nodes}  # dictionnary of the distance between each node to the source (initialized at inf)
         distance[src] = 0
-        a_traiter = [(0, src)]
-        while a_traiter: 
-            dist_noeud, noeud= a_traiter.pop()
-            if not traiter[noeud] :
+        a_traiter = [(0, src)]  # it allows us to update
+        while a_traiter:
+            dist_noeud, noeud = a_traiter.pop()  # we take the value from the last tuple of a_traiter and remove it
+            if not traiter[noeud]:  # if the node is not already treated
                 traiter[noeud] = True
                 neigh = [self.graph[noeud][j] for j in range(0,len(self.graph[noeud]))]
-                for voisin in neigh:
+                for voisin in neigh:  # we iterate for each neighbor of the selected node
                     powermin = voisin[1]
                     if power >= powermin:
-                        dist_voisin = dist_noeud + voisin[2]
-                        if dist_voisin < distance[voisin[0]]:
-                            distance[voisin[0]] = dist_voisin
+                        dist_neigh = dist_noeud + voisin[2]
+                        if dist_neigh < distance[voisin[0]]:
+                            distance[voisin[0]] = dist_neigh
                             precedent[voisin[0]] = noeud
-                            a_traiter.append((dist_voisin, voisin[0]))
-            a_traiter.sort(reverse=True) 
-        return distance, precedent                    
-        
-    def min_distance_dijkstra(self, src, dest, power):
-        
-        #This function return the minimal distance between src and dest for a given power
-        #based on dijkstra function
-        
-        if self.get_path_with_power(src, dest, 'inf') != None:
-            d, p = self.dijkstra(src, dest, power)
-            if p[dest] == None:
-                return None
+                            a_traiter.append((dist_neigh, voisin[0]))
+            a_traiter.sort(reverse=True)
+
+        if self.get_path_with_power(src, dest, float('inf')) != None:
+            p = precedent
+            if p[dest] is None:  # if the dest haven't got a previous node we return none
+                return [src]
             else:
                 T = [dest]
-                i= dest 
+                i = dest
                 while i != src:
                     T.append(p[i])
-                    i= p[i]
-            T.reverse()    
-        return T
-    """
+                    i = p[i]
+                T.reverse()   
+                return T  
+        else:
+            return None              
 
     def min_power(self, src, dest):
         """     
