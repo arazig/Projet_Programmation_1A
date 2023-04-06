@@ -11,7 +11,7 @@ from graph import Graph, graph_from_file, kruskal, oriented_tree_construction, t
 import time
 from random import randint
 import sys
-sys.setrecursionlimit(5000000)
+sys.setrecursionlimit(500000000)
 
 
 
@@ -64,11 +64,9 @@ def Truck(x, catalogue):
             Trucks.append((pow, cost, umax)) 
     return Trucks
 
-print(Truck(6,1))
 
 
-
-def opti(x, catalogue, Budget):
+def opti(x, catalogue, Budget=25*10e9):
     '''
     On utilise un algorithme de type sac à dos où la capacité du sac est donnée par le budget B et les éléments à ranger 
     dans le sac à dos sont les camions en fonction de leurs prix.
@@ -118,8 +116,8 @@ def opti(x, catalogue, Budget):
             n -= 1
         else : 
             utilite_max = matrice[-1][-1]
-            return utilite_max, elements_selection
+            return elements_selection, utilite_max
 
 
-print(opti(1,1,2500000))
+print(opti(1,0,3000000))
 
