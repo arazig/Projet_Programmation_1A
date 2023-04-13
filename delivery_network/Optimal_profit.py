@@ -1,7 +1,7 @@
 """
- L' approche théorique la plus instinctive est dans un premier temps de trier les trajets du fichiers
- route par profit décroissant. Ensuite on parcours chcuns des trajets en lui associant le camion qui coute le moins 
- chere ayant la puissnace minimale requise. On effectue cette opération jusqu'a épuisement du budget ( ie somme des couts > B)
+ L' approche théorique la plus instinctive est dans un premier temps de trier les trajets du fichier
+route par profit décroissant. Ensuite on parcourt chacun des trajets en lui associant le camion qui coute le moins
+chere ayant la puissance minimale requise. On effectue cette opération jusqu'à épuisement du budget ( ie somme des couts > B)
 """
 
 # Importation :

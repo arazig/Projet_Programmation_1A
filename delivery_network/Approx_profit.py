@@ -5,7 +5,7 @@
  route par profit décroissant. Ensuite on parcours chacuns des trajets en lui associant le camion qui coute le moins 
  chere ayant la puissnace minimale requise. On effectue cette opération jusqu'a épuisement du budget ( ie somme des couts > B)
 
-Avantage : si le Budget est tres grand ca nous renvoie la sollution optimale puisque il nous suffit pour chaque trjet d'acheter
+Avantage : si le Budget est tres grand ca nous renvoie la sollution optimale puisque il nous suffit pour chaque trajet d'acheter
 le camion le moins chere sans épuiser notre budget
 """
 
