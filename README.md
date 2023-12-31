@@ -1,5 +1,4 @@
 # ENSAE 1A : projet de programmation
-
 Ce dépôt public contient les ressources pour les étudiants pour le projet de programmation 1A sur l'optimisation d'un réseau de livraison. Pour la description du projet lui-même, se référer au PDF sur pamplemousse. 
 
 Ce dépôt contient plusieurs dossiers et fichiers : 
